@@ -1,138 +1,137 @@
-Towards a Causal Virtual Cell: Graph-Structured Priors Decouple Inference from Representation
+# Towards a Causal Virtual Cell: Graph-Structured Priors Decouple Inference from Representation
 
+**Graph-Structured Priors Decouple Inference from Representation in Single-Cell Biology**
 
-🧬 Overview
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)](LICENSE)
+[![Dataset](https://img.shields.io/badge/Dataset-Zenodo-blue?style=for-the-badge&logo=zenodo)](https://doi.org/10.5281/zenodo.18271659)
 
-Current foundation models in single-cell biology (e.g., scGPT, Geneformer) excel at reconstructing gene expression profiles but often fail to predict the effects of unseen perturbations. We term this phenomenon the "Accuracy-Causality Paradox".
+</div>
 
-This project implements TurboGNN, a Knowledge-Primed Graph Neural Network that integrates biological structural priors (PPI and GO networks) into the latent space. By constraining message passing within a valid biological topology, our framework decouples causal inference from representation learning, enabling:
+---
 
-Robust Generalization: Predicting phenotypic shifts for gene knockouts not seen during training.
+## 🧬 Overview
 
-In Silico Dynamics: Simulating dose-response curves and cell state trajectories.
+Current foundation models in single-cell biology (e.g., scGPT, Geneformer) excel at reconstructing gene expression profiles but often fail to predict the effects of unseen perturbations. We term this phenomenon the **"Accuracy-Causality Paradox"**.
 
-Virtual Drug Screening: Identifying therapeutic rescue targets and epistatic interactions ab initio.
+This project implements **TurboGNN**, a Knowledge-Primed Graph Neural Network that integrates biological structural priors (PPI and GO networks) into the latent space. By constraining message passing within a valid biological topology, our framework decouples causal inference from representation learning, enabling:
 
+* **Robust Generalization:** Predicting phenotypic shifts for gene knockouts not seen during training.
+* **In Silico Dynamics:** Simulating dose-response curves and cell state trajectories.
+* **Virtual Drug Screening:** Identifying therapeutic rescue targets and epistatic interactions *ab initio*.
 
+---
 
-🛠️ Installation
+## 🛠️ Installation
 
-Prerequisites
+### Prerequisites
+* **OS:** Linux, macOS, or Windows
+* **Python:** 3.8+
+* **GPU:** NVIDIA GPU (Recommended for Transformer training, typically requires 8GB+ VRAM)
 
-Linux, macOS, or Windows
-
-Python 3.8+
-
-NVIDIA GPU (Recommended for Transformer training, typically requires 8GB+ VRAM)
-
-Step 1: Clone the repository
-
-git clone [https://github.com/YourUsername/Causal-Virtual-Cell.git](https://github.com/YourUsername/Causal-Virtual-Cell.git)
-
+### Step 1: Clone the repository
+```bash
+git clone https://github.com/YourUsername/Causal-Virtual-Cell.git
 cd Causal-Virtual-Cell
+```
 
-
-Step 2: Set up the environment
-
+### Step 2: Set up the environment
 We recommend using Conda to manage dependencies:
 
+```bash
 conda create -n virtualcell python=3.9
-
 conda activate virtualcell
-
 pip install -r requirements.txt
+```
 
+---
 
-⬇️ Data Preparation
+## ⬇️ Data Preparation
 
 The processed datasets (Perturb-seq expression matrices and Knowledge Graph adjacency matrices) are hosted on Zenodo due to size constraints.
 
 To download the data, run the provided script:
 
+```bash
 cd data
-
 bash download_data.sh
-
 cd ..
+```
 
+> **Dataset DOI:** [10.5281/zenodo.18271659](https://doi.org/10.5281/zenodo.18271659)
+>
+> **Note:** The script automatically fetches `norman_mapped.h5ad` and `adjacency_matrix_optimized.npz` and places them in `data/processed/`.
 
-Dataset DOI: 10.5281/zenodo.18271659
+---
 
-Note: The script automatically fetches norman_mapped.h5ad and adjacency_matrix_optimized.npz and places them in data/processed/.
-
-🚀 Reproduction Instructions
+## 🚀 Reproduction Instructions
 
 To reproduce the results, figures, and tables presented in the manuscript, please execute the scripts in the following order.
 
-1. Training & Inference
+### Training & Inference
+This script trains both the **TurboGNN (Ours)** and the **Sequence Transformer (Baseline)**, performs *in silico* perturbations, and computes manifold projections.
 
-This script trains both the TurboGNN (Ours) and the Sequence Transformer (Baseline), performs in silico perturbations, and computes manifold projections.
+```bash
 python scripts/01_train_and_eval.py
+```
+* **Output:** `results/plot_data.npz` (Contains all numerical results and embeddings).
+* **Runtime:** ~5-20 minutes depending on GPU.
 
-
-Output: results/plot_data.npz (Contains all numerical results and embeddings).
-
-Runtime: ~5-20 minutes depending on GPU.
-
-2. Generate Figures
-
+### Generate Figures
 This script reads the analysis results and generates Figures 1 through 7 as seen in the paper.
 
+```bash
 python scripts/02_visualize_results.py
+```
+* **Output:** Images saved in `results/figures/`.
 
+| Figure | Description |
+| :--- | :--- |
+| **Figure 1** | **Framework:** Model architecture & Latent manifold. |
+| **Figure 2** | **Performance:** Reconstruction & Robustness metrics. |
+| **Figure 3** | **Dynamics:** Dose-response & Trajectories. |
+| **Figure 4** | **Mechanism:** Virtual rescue & Epistasis. |
+| **Figure 5** | **Benchmark:** The Accuracy-Causality Paradox. |
+| **Figure 6** | **Interpretation:** Pathway enrichment & Attention. |
+| **Figure 7** | **Diagnostics:** Model diagnostics & Extended analysis. |
 
-Output: Images saved in results/figures/.
-
-Figure1_Framework.png: Model architecture & Latent manifold.
-
-Figure2_Performance.png: Reconstruction & Robustness metrics.
-
-Figure3_Dynamics.png: Dose-response & Trajectories.
-
-Figure4_Mechanism.png: Virtual rescue & Epistasis.
-
-Figure5_Benchmark.png: The Accuracy-Causality Paradox.
-
-Figure6_Interpretation.png: Pathway enrichment & Attention.
-
-Figure7_Diagnostics.png: Model diagnostics & Extended analysis.
-
-3. Generate Tables
-
+### Generate Tables
 This script computes the statistical metrics (Pearson R, Jaccard Index, etc.) and generates the comparison tables.
 
+```bash
 python scripts/03_make_tables.py
+```
+* **Output:** CSV files saved in `results/tables/`.
 
+| Table | Content |
+| :--- | :--- |
+| **Table 1** | **Reconstruction:** Performance metrics. |
+| **Table 2** | **Causality:** Quantification of OOD generalization. |
+| **Table 3** | **Drug Candidates:** Top hits from virtual screening. |
 
-Output: CSV files saved in results/tables/.
+---
 
-Table1_Reconstruction.csv: Performance metrics.
-
-Table2_Causality.csv: Quantification of OOD generalization.
-
-Table3_Drug_Candidates.csv: Top hits from virtual screening.
-
-💻 Hardware Requirements
+## 💻 Hardware Requirements
 
 The code has been tested on the following configuration:
 
-OS: Ubuntu 20.04 LTS
+* **OS:** Ubuntu 20.04 LTS
+* **CPU:** AMD EPYC / Intel Xeon (16 cores)
+* **GPU:** NVIDIA A100 (80GB) or RTX 3090 (24GB) - *Code supports CPU-only execution but will be slower.*
+* **RAM:** 32GB+
 
-CPU: AMD EPYC / Intel Xeon (16 cores)
+---
 
-GPU: NVIDIA A100 (80GB) or RTX 3090 (24GB) - Code supports CPU-only execution but will be slower.
-
-RAM: 32GB+
-
-
-⚖️ License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-📧 Contact
+## ✉️ Contact
 
 For any questions regarding the code or data, please open an issue or contact:
 
-Jie Ni Email: njie@seu.edu.cn
+**Jie Ni**
+* **Email:** [njie@seu.edu.cn](mailto:njie@seu.edu.cn)
+* **Institution:** Southeast University
 
-Southeast university
+---
+
+## ⚖️ License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
